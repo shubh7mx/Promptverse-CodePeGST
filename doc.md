@@ -254,6 +254,12 @@ The multi-agent system uses a **Coordinator-Worker Blackboard Pattern** where sp
 - **Supply Allocation Calculator**: Automated vehicle and asset dispatch breakdown.
 - **NDMA Standard Operating Procedure Checklists**: Step-by-step digital protocol checklists for Pre-Disaster, During-Disaster, and Post-Disaster phases with PDF/Markdown export.
 
+### 6. DRISHTI Tactical AI Chatbot & Knowledge Assistant
+- **Interactive Multi-Hazard RAG Engine**: Real-time neural query engine capable of answering complex inquiries regarding any of the 28 Indian States & 8 Union Territories, active river hydrograph stages, thermal energy clusters, and swarm agent operations.
+- **OpenRouter & Free Model Support**: Seamless integration with OpenRouter AI keys supporting free state-of-the-art LLMs (`google/gemini-2.0-flash-exp:free`, `meta-llama/llama-3.3-70b-instruct:free`, `deepseek/deepseek-r1:free`) with automated fallback to internal disaster intelligence models.
+- **Action Dispatch & Map Flying**: Chatbot responses include one-tap action triggers allowing commanders to instantly fly the 3D map canvas to specific disaster coordinates, initiate swarm consensus deliberations, or test simulation sandbox scenarios.
+- **Integrated Voice Speech & Audio**: Supports Web Speech API speech-to-text (voice query input) and text-to-speech (audio intelligence briefings).
+
 ---
 
 ## 9. API Reference & Data Endpoints
@@ -262,10 +268,11 @@ The multi-agent system uses a **Coordinator-Worker Blackboard Pattern** where sp
 |---|---|---|---|
 | `/api/telemetry/live` | `GET` | Fetches consolidated multi-source live telemetry from disk/cache. | `horizon=24h\|7d\|30d`, `sync=true\|false` |
 | `/api/telemetry/live` | `POST` | Forces live ingestion from NASA FIRMS, USGS, and Open-Meteo APIs, updating the persistent disk database. | None |
+| `/api/chat` | `POST` | Processes natural language disaster intelligence queries using live telemetry RAG & OpenRouter. | `{ message: string, history: Array }` |
 | `/api/citizen/sos` | `GET` | Lists all submitted citizen SOS emergency beacons. | None |
 | `/api/citizen/sos` | `POST` | Ingests a new citizen emergency beacon and updates live database. | `{ name, phone, coordinates, hazardType, familyCount, batteryPct }` |
 | `/api/swarm/trigger` | `POST` | Dispatches the 8-agent swarm to analyze a specific incident and generate response plans. | `{ incidentId, customParameters }` |
-| `/api/routing/evacuate` | `POST` | Computes obstacle-free evacuation corridors avoiding active hazard buffers. | `{ origin, destinationShelterId, hazardBufferKm }` |
+| `/api/routing/evacuate` | `POST` | Computes obstacle-free evacuation corridors avoiding active hazard buffers using OpenRoute/OSRM. | `{ originLat, originLng, district, state }` |
 
 ---
 

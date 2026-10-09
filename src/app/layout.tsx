@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
+import { DrishtiChatbot } from "@/components/chat/DrishtiChatbot";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,7 @@ export default function RootLayout({
         <main className="w-full flex-1">
           {children}
         </main>
+        <DrishtiChatbot />
       </body>
     </html>
   );
