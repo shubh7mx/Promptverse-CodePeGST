@@ -38,14 +38,6 @@ import { tacticalAudio } from '@/lib/audio/tacticalAudio';
 import { formatNumber } from '@/lib/utils/formatters';
 
 const BASEMAP_STYLES = {
-  dark: {
-    name: 'Tactical Dark',
-    icon: Moon,
-    tiles: [
-      'https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
-    ],
-    attribution: '© Esri, NASA FIRMS, USGS, ISRO Bhuvan, OpenStreetMap',
-  },
   satellite: {
     name: 'Satellite Recon',
     icon: Satellite,
@@ -53,6 +45,14 @@ const BASEMAP_STYLES = {
       'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     ],
     attribution: '© Esri, Maxar, ISRO Bhuvan',
+  },
+  dark: {
+    name: 'Tactical Dark',
+    icon: Moon,
+    tiles: [
+      'https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    ],
+    attribution: '© Esri, NASA FIRMS, USGS, ISRO Bhuvan, OpenStreetMap',
   },
   osm: {
     name: 'OpenStreetMap',
@@ -173,7 +173,7 @@ export function CommandMap() {
   } = useDisasterStore();
 
   const [mapLoaded, setMapLoaded] = useState(false);
-  const [currentBasemap, setCurrentBasemap] = useState<keyof typeof BASEMAP_STYLES>('dark');
+  const [currentBasemap, setCurrentBasemap] = useState<keyof typeof BASEMAP_STYLES>('satellite');
   const [activeMenu, setActiveMenu] = useState<'layers' | 'presets' | 'basemap' | 'search' | null>(null);
   const [showNdrfBases, setShowNdrfBases] = useState<boolean>(true);
   const [cursorCoords, setCursorCoords] = useState<{ lat: number; lng: number } | null>(null);
