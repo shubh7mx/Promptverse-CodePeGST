@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState, useMemo } from 'react';
+import type { FeatureCollection } from 'geojson';
 import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import {
@@ -182,7 +183,7 @@ export function CommandMap() {
   // Visualization Mode: 'HYBRID' | 'HEATMAP' | 'NODES'
   const [visualMode, setVisualMode] = useState<'HYBRID' | 'HEATMAP' | 'NODES'>('HYBRID');
 
-  // Heatmap toggles
+  const [mounted, setMounted] = useState(false);
   const [showFireHeatmap, setShowFireHeatmap] = useState<boolean>(true);
   const [showFloodHeatmap, setShowFloodHeatmap] = useState<boolean>(true);
   const [showRiskHeatmap, setShowRiskHeatmap] = useState<boolean>(true);
@@ -193,6 +194,7 @@ export function CommandMap() {
 
   // Initial Live Telemetry Sync on mount
   useEffect(() => {
+    setMounted(true);
     fetchLiveTelemetry(timeHorizon, false);
   }, []);
 
@@ -393,7 +395,7 @@ export function CommandMap() {
     const map = mapRef.current;
 
     // 1. NASA FIRMS Live Wildfires Heatmap
-    const firmsGeoJson: GeoJSON.FeatureCollection = {
+    const firmsGeoJson: FeatureCollection = {
       type: 'FeatureCollection',
       features: dynamicTimelineData.fires.map((fire) => ({
         type: 'Feature',
@@ -462,7 +464,7 @@ export function CommandMap() {
     }
 
     // 2. Open-Meteo & CWC River Basin Inundation Heatmap
-    const floodGeoJson: GeoJSON.FeatureCollection = {
+    const floodGeoJson: FeatureCollection = {
       type: 'FeatureCollection',
       features: dynamicTimelineData.rivers.map((gauge) => {
         const dangerRatio = gauge.currentLevelM / Math.max(1, gauge.dangerLevelM);
@@ -531,7 +533,7 @@ export function CommandMap() {
     }
 
     // 3. Multi-Hazard Composite Vulnerability Heatmap
-    const hazardGeoJson: GeoJSON.FeatureCollection = {
+    const hazardGeoJson: FeatureCollection = {
       type: 'FeatureCollection',
       features: KEY_DISTRICT_PROFILES.map((dist) => ({
         type: 'Feature',
@@ -1489,7 +1491,7 @@ export function CommandMap() {
           <span className="text-emerald-400 font-medium">{activeSensorsCount} live telemetry nodes</span>
           <span className="text-slate-700">·</span>
           <span className="text-slate-400 text-[10px]">
-            Live Sync: {new Date(lastLiveSync).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+            Live Sync: {mounted ? new Date(lastLiveSync).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : 'Synchronizing...'}
           </span>
         </div>
       </div>

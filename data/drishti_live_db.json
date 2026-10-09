@@ -1,8 +1,8 @@
 {
   "meta": {
-    "lastSyncedAt": "2026-10-09T09:28:37.768Z",
+    "lastSyncedAt": "2026-10-09T09:52:43.297Z",
     "version": "2.0.0-LIVE",
-    "totalSyncCount": 11,
+    "totalSyncCount": 12,
     "activeSources": [
       "USGS_REALTIME_GEOJSON",
       "NASA_FIRMS_VIIRS_CSV",

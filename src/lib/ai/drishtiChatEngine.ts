@@ -383,7 +383,7 @@ export async function processDrishtiQuery(
     content += `#### 🌲 Highest Radiative Energy Clusters (Top 5 Active Hotspots):\n`;
     topFires.forEach((f, idx) => {
       content += `${idx + 1}. **${f.forestReserve || f.state}** [${f.latitude.toFixed(2)}°N, ${f.longitude.toFixed(2)}°E]\n`;
-      content += `   - **FRP**: \`${f.frp} MW\` | **Confidence**: \`${f.confidence.toUpperCase()}\` | **Satellite**: \`${f.satellite}\`\n`;
+      content += `   - **FRP**: \`${f.frp} MW\` | **Confidence**: \`${String(f.confidence).toUpperCase()}\` | **Satellite**: \`${f.satellite}\`\n`;
       content += `   - **Detection Time**: \`${f.acqDate} ${f.acqTime} UTC\`\n`;
     });
 
