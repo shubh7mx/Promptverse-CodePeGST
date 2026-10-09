@@ -9,7 +9,7 @@
  * - Interactive action dispatching (Map navigation, Swarm triggers, Simulation setups)
  */
 
-import { getLiveDataStore } from '@/lib/db/liveDataStore';
+import { getPersistentDb } from '@/lib/db/liveDataStore';
 import { KEY_DISTRICT_PROFILES, MAJOR_NDRF_BATTALIONS, SAMPLE_RELIEF_SHELTERS } from '@/lib/geo/indiaGeoData';
 import { FireHotspot, EarthquakeEvent, RiverBasinTelemetry, DisasterIncident } from '@/types/disaster';
 
@@ -132,7 +132,12 @@ You have real-time live telemetry data from space satellites (NASA FIRMS VIIRS/M
     if (res.ok) {
       const data = await res.json();
       const aiReply = data.choices?.[0]?.message?.content;
-      if (aiReply && aiReply.trim()) {
+      if (
+        aiReply &&
+        aiReply.trim() &&
+        !aiReply.toLowerCase().includes("i can't provide that") &&
+        !aiReply.toLowerCase().includes("i cannot provide that")
+      ) {
         return aiReply.trim();
       }
     }
@@ -151,7 +156,7 @@ export async function processDrishtiQuery(
   history: Array<{ role: 'user' | 'assistant'; content: string }> = []
 ): Promise<ChatbotResponse> {
   const query = userQuery.toLowerCase().trim();
-  const db = getLiveDataStore();
+  const db = getPersistentDb();
   const horizonData = db.horizon24h;
 
   const liveFires = horizonData.wildfires || [];
@@ -474,7 +479,7 @@ export async function processDrishtiQuery(
     content += `|---|---|---|---|---|---|---|\n`;
 
     MAJOR_NDRF_BATTALIONS.slice(0, 8).forEach((b) => {
-      content += `| **${b.battalionNumber} Bn** | ${b.baseLocation} | ${b.state} | \`${b.personnelCount}\` | **${b.boatsCount}** | **${b.medicalTeamsCount}** | 🟢 ${b.operationalStatus} |\n`;
+      content += `| **${b.battalionNumber} Bn** | ${b.baseLocation} | ${b.state} | \`${b.totalPersonnel}\` | **${b.inflatableRescueBoats}** | **${b.medicalFirstResponders}** | 🟢 ${b.readinessStatus} |\n`;
     });
 
     content += `\n#### 📦 Rapid Equipment & Supply Standards:\n`;
@@ -708,7 +713,7 @@ function generateStateIntelligenceReport(
   if (stateBattalions.length > 0) {
     content += `#### 🛡️ Local NDRF Battalion Presence:\n`;
     stateBattalions.forEach((b) => {
-      content += `- **${b.battalionNumber} Bn NDRF** stationed at *${b.baseLocation}*: \`${b.personnelCount}\` personnel, **${b.boatsCount} rescue boats (IRBs)**, **${b.medicalTeamsCount} trauma units**.\n`;
+      content += `- **${b.battalionNumber} Bn NDRF** stationed at *${b.baseLocation}*: \`${b.totalPersonnel}\` personnel, **${b.inflatableRescueBoats} rescue boats (IRBs)**, **${b.medicalFirstResponders} trauma responders**.\n`;
     });
     content += `\n`;
   }
@@ -717,7 +722,7 @@ function generateStateIntelligenceReport(
   if (stateDistricts.length > 0) {
     content += `#### 📌 High Vulnerability Districts Monitored:\n`;
     stateDistricts.forEach((d) => {
-      content += `- **${d.districtName}**: Vulnerability Score **${d.overallVulnerabilityScore}/100** | Population: **${(d.population / 100000).toFixed(1)} Lakh** | Top Hazards: \`${d.primaryHazards.join(', ')}\`\n`;
+      content += `- **${d.districtName}**: Vulnerability Score **${d.overallVulnerabilityScore}/100** | Population: **${(d.population / 100000).toFixed(1)} Lakh** | Dominant Threat: \`${d.dominantThreat}\`\n`;
     });
     content += `\n`;
   }
