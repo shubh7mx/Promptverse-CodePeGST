@@ -1,0 +1,25 @@
+services:
+  drishti-swarm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: drishti_swarm_platform
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    volumes:
+      # Persistent local storage for live satellite, seismic and hydrology database
+      - drishti_live_data:/app/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+volumes:
+  drishti_live_data:
+    driver: local
