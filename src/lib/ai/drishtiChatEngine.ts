@@ -86,7 +86,7 @@ async function callOpenRouter(
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey || apiKey.trim() === '') return null;
 
-  const model = process.env.OPENROUTER_MODEL || 'google/gemini-2.0-flash-exp:free';
+  const model = process.env.OPENROUTER_MODEL || 'openrouter/free';
   const baseUrl = process.env.OPENROUTER_BASE_URL || 'https://openrouter.ai/api/v1';
 
   const systemPrompt = `You are DRISHTI Tactical AI, India's National Multi-Hazard Disaster Intelligence Assistant.
